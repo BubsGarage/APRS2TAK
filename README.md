@@ -2,6 +2,8 @@
 
 Shows APRS stations heard by **APRSdroid** on the **ATAK** map, with their real APRS symbols. Everything runs on the phone: no internet, no TAK server, no laptop, and no ATAK plugin, so it works with the regular Play Store ATAK-CIV and alongside your other plugins.
 
+![APRS2TAK showing APRS stations in ATAK](screenshot.png)
+
 ```
 radio ──► APRSdroid (decodes APRS) ──► APRS2TAK ──► ATAK map (127.0.0.1:4242 UDP)
 ```
