@@ -91,16 +91,16 @@ public class MainActivity extends AppCompatActivity {
         layout.addView(callTitle);
 
         TextView callInfo = new TextView(this);
-        callInfo.setText("My callsign (optional): fill this in to hide your own APRS "
-                + "beacons, since ATAK already shows your position. Leave it blank to "
-                + "show everything. Without an SSID (N0CALL) it hides all your SSIDs; "
-                + "with one (N0CALL-7) it hides only that one.");
+        callInfo.setText("My callsign (optional): enter the exact callsign and SSID "
+                + "APRSdroid beacons as (e.g. N0CALL-7) to hide that one station, since "
+                + "ATAK already shows your position. Your other stations (home, iGate, "
+                + "digi) still show. Leave it blank to show everything.");
         layout.addView(callInfo);
 
         myCall = new EditText(this);
         myCall.setSingleLine(true);
         myCall.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
-        myCall.setHint("Optional, e.g. N0CALL");
+        myCall.setHint("Optional, e.g. N0CALL-7");
         myCall.setText(prefs.getString(KEY_CALL, ""));
         layout.addView(myCall);
 

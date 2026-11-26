@@ -29,7 +29,7 @@ radio ──► APRSdroid (decodes APRS) ──► APRS2TAK ──► ATAK map (
 
 **Settings**
 
-- **My callsign (optional)**: fill it in to hide your own APRS beacons, since ATAK already shows your position. Leave it blank to show everything. Without an SSID (e.g. `N0CALL`) it hides all your SSIDs; with one (`N0CALL-7`) it hides only that one.
+- **My callsign (optional)**: enter the exact callsign and SSID APRSdroid beacons as (e.g. `N0CALL-7`) to hide that station, since ATAK already shows your position. Your other stations (home, iGate, digi) still show. Leave it blank to show everything.
 - **Keep stations on the map for**: minutes after a station's last beacon (1–1440, default 30). Takes effect on each station's next beacon.
 
 ## Symbols

@@ -158,11 +158,11 @@ public class BridgeService extends Service {
         callsign = callsign.trim();
         if (callsign.isEmpty()) return;
 
-        // Skip our own beacons (ATAK already shows us). Objects we send still show.
-        if (source != null && callsign.equalsIgnoreCase(source) && isOwnCall(source)) return;
-
         // read settings each time so changes in the app apply right away
         loadCallsign();
+
+        // Skip our own beacons (ATAK already shows us). Objects we send still show.
+        if (source != null && callsign.equalsIgnoreCase(source) && isOwnCall(source)) return;
         int staleMinutes = getSharedPreferences(MainActivity.PREFS, MODE_PRIVATE)
                 .getInt(MainActivity.KEY_STALE, MainActivity.DEFAULT_STALE);
         String xml = buildCot(callsign, source, packet, loc, staleMinutes);
@@ -184,13 +184,10 @@ public class BridgeService extends Service {
         });
     }
 
+    /** Exact callsign+SSID match only, so your other stations (home, iGate, digi) still show. */
     private boolean isOwnCall(String source) {
         if (!aprsdroidCall.isEmpty() && aprsdroidCall.equalsIgnoreCase(source)) return true;
-        if (typedCall.isEmpty()) return false;
-        if (typedCall.contains("-")) return typedCall.equalsIgnoreCase(source);
-        // typed without SSID: match N0CALL, N0CALL-7, N0CALL-9, ...
-        String base = source.contains("-") ? source.substring(0, source.indexOf('-')) : source;
-        return typedCall.equalsIgnoreCase(base);
+        return !typedCall.isEmpty() && typedCall.equalsIgnoreCase(source);
     }
 
     private static String buildCot(String callsign, String source, String packet, Location loc,
@@ -325,8 +322,23 @@ public class BridgeService extends Service {
         return f.format(new Date(ms));
     }
 
+    /** XML-escapes text and drops control characters XML 1.0 can't contain
+     *  (Mic-E packets carry raw bytes like 0x1c that would make ATAK reject the event). */
     private static String esc(String s) {
-        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-                .replace("\"", "&quot;").replace("'", "&apos;");
+        StringBuilder b = new StringBuilder(s.length());
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c < 0x20 && c != '\n' && c != '\r' && c != '\t') continue;
+            if (c == 0x7f || c == 0xfffe || c == 0xffff) continue;
+            switch (c) {
+                case '&': b.append("&amp;"); break;
+                case '<': b.append("&lt;"); break;
+                case '>': b.append("&gt;"); break;
+                case '"': b.append("&quot;"); break;
+                case '\'': b.append("&apos;"); break;
+                default: b.append(c);
+            }
+        }
+        return b.toString();
     }
 }
